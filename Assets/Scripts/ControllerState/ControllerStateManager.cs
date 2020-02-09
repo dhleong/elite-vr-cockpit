@@ -15,19 +15,18 @@ namespace EVRC
 
         private IControllerState state;
         private GrabbableControl? grabbing;
+        private CockpitMode mode = CockpitMode.GameNotRunning;
 
         public void OnCockpitUIModeChanged(CockpitMode newMode)
         {
+            mode = newMode;
             if (newMode.HasFlag(CockpitMode.Cockpit))
             {
-                if (grabbing == GrabbableControl.Joystick)
-                {
-                    TransitionToState(new JoystickState());
-                }
-                else
-                {
-                    TransitionToState(new CockpitIdleState());
-                }
+                TransitionToState(new CockpitIdleState());
+            }
+            else if (newMode.HasFlag(CockpitMode.MenuMode))
+            {
+                TransitionToState(new MenuState());
             }
 
             // TODO transition state
@@ -36,12 +35,16 @@ namespace EVRC
         public void OnGrabbing(GrabbableControl control)
         {
             grabbing = control;
-            if (state is CockpitIdleState)
+
+            switch (grabbing)
             {
-                if (grabbing == GrabbableControl.Joystick)
-                {
+                case GrabbableControl.Joystick:
                     TransitionToState(new JoystickState());
-                }
+                    break;
+
+                default:
+                    // ?
+                    break;
             }
 
             // TODO transition state
@@ -50,7 +53,7 @@ namespace EVRC
         public void OnReleased(GrabbableControl control)
         {
             grabbing = null;
-            if (state is JoystickState)
+            if (mode.HasFlag(CockpitMode.Cockpit))
             {
                 TransitionToState(new CockpitIdleState());
             }
