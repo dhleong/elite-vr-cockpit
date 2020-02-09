@@ -24,6 +24,10 @@ namespace EVRC
             {
                 TransitionToState(new CockpitIdleState());
             }
+            else if (newMode.HasFlag(CockpitMode.Map))
+            {
+                TransitionToState(new MapState());
+            }
             else if (newMode.HasFlag(CockpitMode.MenuMode))
             {
                 TransitionToState(new MenuState());

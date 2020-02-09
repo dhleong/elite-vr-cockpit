@@ -9,6 +9,15 @@ namespace EVRC
 
     public static class DelegateFactory
     {
+        public static DirectionActionChangePressHandler DirectionControlPress(EDControlButton button)
+        {
+            return (DirectionActionChange pEv) =>
+            {
+                var unpress = CallbackPress(EDControlBindings.GetControlButton(button));
+                return (uEv) => unpress();
+            };
+        }
+
         public static DirectionActionChangePressHandler DirectionKeyPress(string keyName)
         {
             var key = Key(keyName);
