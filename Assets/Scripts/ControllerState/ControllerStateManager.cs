@@ -32,8 +32,6 @@ namespace EVRC
             {
                 TransitionToState(new MenuState());
             }
-
-            // TODO transition state
         }
 
         public void OnGrabbing(GrabbableControl control)
@@ -46,12 +44,14 @@ namespace EVRC
                     TransitionToState(new JoystickState());
                     break;
 
+                case GrabbableControl.Throttle:
+                    TransitionToState(new ThrottleState());
+                    break;
+
                 default:
                     // ?
                     break;
             }
-
-            // TODO transition state
         }
 
         public void OnReleased(GrabbableControl control)
